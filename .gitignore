@@ -1,0 +1,36 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# environment
+.env
+.env.*
+!.env.example
+
+# build output
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# prisma generated client
+packages/**/generated/
+apps/api/src/generated/
+
+# test / e2e artifacts
+playwright-report/
+test-results/
+apps/e2e/screenshots-tmp/
+
+# editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
