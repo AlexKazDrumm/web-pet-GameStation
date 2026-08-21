@@ -1,0 +1,23 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+}
+
+.footer {
+  border-top: 1px solid var(--border);
+  color: var(--text-faint);
+  font-size: 0.82rem;
+  padding-block: var(--space-5);
+}
+
+.footer :global(.container) {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
