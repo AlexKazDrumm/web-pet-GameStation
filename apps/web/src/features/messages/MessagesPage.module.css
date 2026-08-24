@@ -1,0 +1,46 @@
+.thread {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+  max-height: 55vh;
+  overflow-y: auto;
+}
+
+.bubble {
+  display: grid;
+  gap: 4px;
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  max-width: 78%;
+}
+
+.mine {
+  justify-self: end;
+  background: color-mix(in srgb, var(--primary) 16%, var(--surface));
+  border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+}
+
+.theirs {
+  justify-self: start;
+  background: var(--surface);
+}
+
+.meta {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+
+.composer {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+@media (min-width: 560px) {
+  .composer {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+  }
+}
