@@ -2,16 +2,24 @@ import { execFileSync } from 'node:child_process';
 
 /**
  * Applies migrations once before the API test run.
- * Requires a reachable PostgreSQL in DATABASE_URL (or TEST_DATABASE_URL).
+ * Requires a dedicated database or schema in TEST_DATABASE_URL.
  */
 export default function setup(): void {
-  const databaseUrl = process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL;
+  const databaseUrl = process.env.TEST_DATABASE_URL;
   if (!databaseUrl) {
-    throw new Error('Для тестов API задайте TEST_DATABASE_URL или DATABASE_URL');
+    throw new Error('Для тестов API задайте отдельную TEST_DATABASE_URL');
   }
-  execFileSync('npx', ['prisma', 'migrate', 'deploy'], {
+
+  const url = new URL(databaseUrl);
+  const databaseName = url.pathname.slice(1).toLowerCase();
+  const schemaName = (url.searchParams.get('schema') ?? 'public').toLowerCase();
+  if (!databaseName.includes('test') && !schemaName.includes('test')) {
+    throw new Error('TEST_DATABASE_URL должна указывать на тестовую БД или тестовую схему');
+  }
+
+  const npx = process.platform === 'win32' ? 'npx.cmd' : 'npx';
+  execFileSync(npx, ['prisma', 'migrate', 'deploy'], {
     stdio: 'inherit',
     env: { ...process.env, DATABASE_URL: databaseUrl },
-    shell: process.platform === 'win32',
   });
 }

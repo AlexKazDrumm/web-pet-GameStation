@@ -1,10 +1,18 @@
 {
-  "name": "web-pet-gamestation",
+  "name": "gamestation",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "GameStation — игровой портал с мини-играми, лидербордами, отзывами и перепиской игрок–администратор",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexKazDrumm/web-pet-GameStation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AlexKazDrumm/web-pet-GameStation/issues"
+  },
+  "homepage": "https://github.com/AlexKazDrumm/web-pet-GameStation#readme",
   "engines": {
     "node": ">=20 <25"
   },
@@ -25,7 +33,9 @@
     "e2e": "npm run test --workspace @gamestation/e2e",
     "e2e:install": "npm run install:browsers --workspace @gamestation/e2e",
     "docker:up": "docker compose up --build -d",
-    "docker:down": "docker compose down -v"
+    "docker:seed": "docker compose exec api npm run db:seed:prod",
+    "docker:down": "docker compose down",
+    "docker:reset": "docker compose down -v"
   },
   "overrides": {
     "tsup": {

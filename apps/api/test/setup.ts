@@ -1,9 +1,10 @@
 import { beforeAll, beforeEach } from 'vitest';
 
-const databaseUrl = process.env.TEST_DATABASE_URL ?? process.env.DATABASE_URL;
-if (databaseUrl) {
-  process.env.DATABASE_URL = databaseUrl;
+const databaseUrl = process.env.TEST_DATABASE_URL;
+if (!databaseUrl) {
+  throw new Error('Для тестов API задайте отдельную TEST_DATABASE_URL');
 }
+process.env.DATABASE_URL = databaseUrl;
 process.env.NODE_ENV = 'test';
 process.env.JWT_SECRET ??= 'test-secret-value-that-is-long-enough-x';
 process.env.WEB_ORIGIN ??= 'http://localhost:5173';
