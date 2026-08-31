@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:20-alpine AS build
+FROM node:22-alpine AS build
 WORKDIR /repo
 COPY package.json package-lock.json tsconfig.base.json ./
 COPY packages ./packages
@@ -8,7 +8,7 @@ COPY apps ./apps
 RUN npm ci
 RUN npm run build --workspace @gamestation/api
 
-FROM node:20-alpine AS runtime
+FROM node:22-alpine AS runtime
 ENV NODE_ENV=production
 WORKDIR /repo
 COPY --from=build /repo ./

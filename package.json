@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/AlexKazDrumm/web-pet-GameStation#readme",
   "engines": {
-    "node": ">=20 <25"
+    "node": ">=22.11 <23"
   },
   "workspaces": [
     "packages/*",

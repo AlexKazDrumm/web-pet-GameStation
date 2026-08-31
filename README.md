@@ -69,7 +69,7 @@ origin, ограничение размера тела запроса, rate-limi
 
 ## Стек
 
-- **API:** Node.js 20+, Express, TypeScript, Prisma (PostgreSQL), zod, jsonwebtoken, bcryptjs,
+- **API:** Node.js 22 LTS, Express, TypeScript, Prisma (PostgreSQL), zod, jsonwebtoken, bcryptjs,
   Helmet, express-rate-limit, pino. Тесты — Vitest + Supertest.
 - **Клиент:** React 18, TypeScript, Vite, React Router, TanStack Query, Zustand.
   Тесты — Vitest + Testing Library.
@@ -78,7 +78,7 @@ origin, ограничение размера тела запроса, rate-limi
 
 ## Требования
 
-- Node.js 20–24 и npm 10+;
+- Node.js 22.11+ (ветка 22.x) и npm 10+;
 - PostgreSQL 16+ для локального API или Docker с Compose для готового стека;
 - Chromium, установленный командой `npm run e2e:install`, для сквозных тестов.
 
