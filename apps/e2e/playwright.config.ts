@@ -15,5 +15,12 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    { name: 'desktop-chromium', use: { ...devices['Desktop Chrome'] } },
+    {
+      name: 'mobile-chromium',
+      testMatch: /ui-quality\.spec\.ts/,
+      use: { ...devices['Pixel 5'] },
+    },
+  ],
 });

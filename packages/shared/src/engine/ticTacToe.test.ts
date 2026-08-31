@@ -81,7 +81,6 @@ describe('findWinner', () => {
 describe('isDraw / emptyCells / withMove', () => {
   it('reports a draw only on a full board with no winner', () => {
     expect(isDraw(boardFrom(['XOX', 'XOO', 'OXX']), 3)).toBe(true);
-    // not full yet
     expect(isDraw(boardFrom(['XOX', 'XO.', 'OXX']), 3)).toBe(false);
     // full board but X has the main diagonal
     expect(isDraw(boardFrom(['XOX', 'OXO', 'XOX']), 3)).toBe(false);

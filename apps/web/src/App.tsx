@@ -40,7 +40,7 @@ export function App() {
     return () => {
       alive = false;
     };
-    // Session check runs once on load.
+    // Authentication is revalidated once during the initial application bootstrap.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

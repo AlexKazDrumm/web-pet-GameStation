@@ -28,7 +28,6 @@ export function TicTacToePage() {
 
   useEffect(() => {
     win.reset();
-    // reset the record-win state whenever a new board starts
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game.size, game.smart]);
 

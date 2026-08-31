@@ -34,7 +34,7 @@
 packages/shared   общие контракты (zod-схемы и типы) и чистая игровая логика
 apps/api          HTTP API: Express + TypeScript + Prisma
 apps/web          клиент: Vite + React + TypeScript
-apps/e2e          сквозной smoke-тест на Playwright
+apps/e2e          Playwright smoke и desktop/mobile UI quality checks
 ```
 
 Границы контрактов описаны один раз в `packages/shared` и используются и сервером, и клиентом:
@@ -76,14 +76,24 @@ origin, ограничение размера тела запроса, rate-limi
 - **Сквозной тест:** Playwright.
 - **Инфраструктура:** Docker Compose (PostgreSQL 16, API, статика через nginx).
 
+## Требования
+
+- Node.js 20–24 и npm 10+;
+- PostgreSQL 16+ для локального API или Docker с Compose для готового стека;
+- Chromium, установленный командой `npm run e2e:install`, для сквозных тестов.
+
 ## Переменные окружения
 
-Шаблон — `.env.example`; для локального запуска скопируйте его в `.env`.
+Корневой шаблон `.env.example` используется API и Docker Compose. Необязательные настройки
+Vite находятся в `apps/web/.env.example`; копируйте их в `apps/web/.env`, только если нужно
+изменить адрес dev-прокси или API.
 
 | Переменная | Назначение |
 | --- | --- |
 | `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | параметры контейнера PostgreSQL |
+| `POSTGRES_PORT`, `WEB_PORT` | опубликованные порты PostgreSQL и nginx в Docker Compose |
 | `DATABASE_URL` | строка подключения API к базе |
+| `TEST_DATABASE_URL` | отдельная тестовая БД или схема; API-тесты откажутся очищать обычную БД |
 | `NODE_ENV` | `development` / `test` / `production` |
 | `API_PORT` | порт HTTP API (по умолчанию `4000`) |
 | `JWT_SECRET` | секрет подписи JWT, не короче 32 символов |
@@ -92,7 +102,7 @@ origin, ограничение размера тела запроса, rate-limi
 | `WEB_ORIGIN` | разрешённые origin для CORS, через запятую |
 | `SEED_PASSWORD` | пароль учётных записей из seed-скрипта |
 | `VITE_API_URL` | базовый URL API для клиента; пусто — dev-прокси Vite на `/api` |
-| `WEB_PORT` | порт статики в Docker Compose (по умолчанию `8080`) |
+| `API_PROXY_TARGET` | адрес API для dev-прокси Vite (по умолчанию `http://localhost:4000`) |
 
 Для production задайте собственные `JWT_SECRET` и пароль базы — значения из `.env.example`
 являются лишь заглушками.
@@ -103,19 +113,22 @@ origin, ограничение размера тела запроса, rate-limi
 cp .env.example .env
 # задайте JWT_SECRET и POSTGRES_PASSWORD в .env
 npm run docker:up
+npm run docker:seed             # необязательно: добавить демонстрационные данные
 ```
 
 - клиент — http://localhost:8080
 - API — http://localhost:8080/api (и напрямую http://localhost:4000/api)
 
 API при старте контейнера применяет миграции (`prisma migrate deploy`). Остановить стек:
-`npm run docker:down`.
+`npm run docker:down`; данные PostgreSQL при этом сохраняются. Команда `npm run docker:reset`
+дополнительно удаляет локальный volume с данными.
 
 ## Локальная разработка
 
 ```bash
-npm install
+npm ci
 cp .env.example .env            # DATABASE_URL → localhost:5432
+docker compose up -d db          # либо используйте существующий PostgreSQL
 
 npm run db:migrate              # применить миграции к пустой базе
 npm run db:seed                 # небольшой обезличенный набор данных
@@ -148,12 +161,29 @@ npm run db:reset               # пересоздать базу и примен
 npm run typecheck              # строгая проверка типов во всех пакетах
 npm run lint                   # ESLint
 npm test                       # модульные тесты движков, API-тесты, компонентные тесты клиента
-npm run e2e                    # Playwright: регистрация → игра → победа в лидерборде
+npm run e2e                    # smoke-сценарий и desktop/mobile UI quality checks
+npm run build                  # production-сборка shared, API и web
+git diff --check               # ошибки пробелов и конфликтные маркеры в diff
 ```
 
-Для `npm test` нужна доступная база (`DATABASE_URL` или `TEST_DATABASE_URL`); для `npm run e2e`
-должен быть поднят стек (например, `npm run docker:up`) и установлен браузер:
-`npm run e2e:install`.
+Для `npm test` нужна доступная отдельная `TEST_DATABASE_URL`. Имя БД или схемы должно содержать
+`test`; это защищает обычные данные от очистки тестовыми фикстурами. Для `npm run e2e` должен быть
+поднят стек (например, `npm run docker:up`) и установлен браузер: `npm run e2e:install`.
+
+Playwright проверяет основной пользовательский путь, desktop/mobile viewport, загрузку локальных
+изображений и favicon, ошибки консоли и сети, а также отсутствие горизонтального overflow.
+Те же проверки запускаются в GitHub Actions для каждого pull request и изменения `main`.
+
+## Production-сборка
+
+```bash
+npm ci
+npm run build
+npm run preview --workspace @gamestation/web
+```
+
+Собранный API запускается командой `npm run start --workspace @gamestation/api`; перед запуском
+задайте production-переменные окружения и примените `npm run db:migrate`.
 
 ## Структура репозитория
 
@@ -161,10 +191,14 @@ npm run e2e                    # Playwright: регистрация → игра
 apps/
   api/    Express + Prisma; модули auth, scores, reviews, messages, users, health
   web/    React-клиент; features по экранам, общие ui-компоненты, слой api
-  e2e/    Playwright smoke
+  e2e/    Playwright smoke и UI quality checks
 packages/
   shared/ contracts (zod) + engine (tic-tac-toe, rock-paper-scissors)
 docs/
   screenshots/  изображения для README
 docker-compose.yml
 ```
+
+## Лицензия
+
+Проект распространяется по лицензии [MIT](LICENSE). Copyright © 2026 AlexKazDrumm.

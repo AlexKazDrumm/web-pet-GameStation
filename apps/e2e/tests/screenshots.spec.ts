@@ -50,7 +50,6 @@ test('capture README screenshots', async ({ page }) => {
   await expect(page.getByText(/сбросился прогресс/i)).toBeVisible();
   await page.screenshot({ path: `${SHOTS}/07-messages.png`, fullPage: true });
 
-  // Admin view
   await page.getByRole('button', { name: 'Выйти' }).click();
   await login(page, 'admin@gamestation.local');
   await page.goto('/admin');

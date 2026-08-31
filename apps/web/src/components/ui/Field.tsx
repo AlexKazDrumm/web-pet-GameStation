@@ -65,9 +65,14 @@ export function TextAreaField({
         id={fieldId}
         className={cx(styles.control, error && styles.invalid, className)}
         aria-invalid={error ? true : undefined}
+        aria-describedby={error ? `${fieldId}-error` : undefined}
         {...rest}
       />
-      {error && <span className={styles.error}>{error}</span>}
+      {error && (
+        <span id={`${fieldId}-error`} className={styles.error}>
+          {error}
+        </span>
+      )}
     </div>
   );
 }
@@ -87,10 +92,20 @@ export function SelectField({
       <label className={styles.label} htmlFor={fieldId}>
         {label}
       </label>
-      <select id={fieldId} className={cx(styles.control, className)} {...rest}>
+      <select
+        id={fieldId}
+        className={cx(styles.control, error && styles.invalid, className)}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? `${fieldId}-error` : undefined}
+        {...rest}
+      >
         {children}
       </select>
-      {error && <span className={styles.error}>{error}</span>}
+      {error && (
+        <span id={`${fieldId}-error`} className={styles.error}>
+          {error}
+        </span>
+      )}
     </div>
   );
 }
