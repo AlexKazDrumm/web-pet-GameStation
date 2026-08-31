@@ -6,7 +6,7 @@ export default defineConfig({
     seed: 'prisma/seed.ts',
   },
   format: ['esm'],
-  target: 'node20',
+  target: 'node22',
   platform: 'node',
   outDir: 'dist',
   clean: true,

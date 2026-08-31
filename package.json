@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "description": "GameStation — игровой портал с мини-играми, лидербордами, отзывами и перепиской игрок–администратор",
-  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AlexKazDrumm/web-pet-GameStation.git"

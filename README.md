@@ -198,7 +198,3 @@ docs/
   screenshots/  изображения для README
 docker-compose.yml
 ```
-
-## Лицензия
-
-Проект распространяется по лицензии [MIT](LICENSE). Copyright © 2026 AlexKazDrumm.
